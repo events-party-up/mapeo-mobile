@@ -20,26 +20,12 @@
 const http = require('http');
 const path = require('path');
 const osm = require('osm-p2p');
-const blobstore = require('fs-blob-store');
+const blobstore = require('safe-fs-blob-store');
 const Router = require('mapeo-server');
 const walk = require('fs-walk');
 const os = require('os');
 const mkdirp = require('mkdirp');
 const styles = require('mapeo-styles');
-
-blobstore.prototype._list = function(cb) {
-  var names = [];
-  walk.files(
-    this._dir,
-    function(basedir, filename, stat, next) {
-      names.push(filename);
-    },
-    function(err) {
-      if (err && err.code === 'ENOENT') cb(null, []);
-      else cb(err, names);
-    }
-  );
-};
 
 console.log('1: init');
 
@@ -50,6 +36,9 @@ const USER_ID = 'default';
 const USER_PATH = path.join(os.homedir(), 'mapeo', USER_ID);
 const DB_PATH = path.join(USER_PATH, 'db');
 const MEDIA_PATH = path.join(USER_PATH, 'media');
+
+// TODO: get user's name, defined in front-end
+const HOST = 'Android phone'
 
 const STATIC_PATH = path.join('/sdcard/Android/data/com.mapeomobile/static');
 
@@ -71,6 +60,7 @@ function start() {
   const media = blobstore(MEDIA_PATH);
 
   const route = Router(db, media, {
+    host: HOST,
     media: { mode: 'push' },
     staticRoot: STATIC_PATH
   });

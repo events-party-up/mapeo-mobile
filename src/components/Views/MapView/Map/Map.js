@@ -182,7 +182,11 @@ class Map extends React.Component<Props & StateProps & DispatchProps> {
     const { coords } = this.props;
 
     if (this.map && coords) {
-      this.map.moveTo([coords.longitude, coords.latitude], 200);
+      this.map.setCamera({
+        centerCoordinate: [coords.longitude, coords.latitude],
+        zoom: 13,
+        duration: 500
+      });
     }
   };
 
@@ -199,17 +203,7 @@ class Map extends React.Component<Props & StateProps & DispatchProps> {
         <View style={{ flex: 1 }}>
           <MapboxGL.MapView
             style={{ flex: 1 }}
-            centerCoordinate={
-              coords ? [coords.longitude, coords.latitude] : undefined
-            }
             ref={this.handleMapViewRef}
-            zoomLevel={
-              selectedStyle
-                ? Math.floor(
-                    (selectedStyle.minzoom + selectedStyle.maxzoom) / 2
-                  )
-                : 12
-            }
             minZoomLevel={selectedStyle ? selectedStyle.minzoom : undefined}
             maxZoomLevel={22}
             logoEnabled
@@ -219,7 +213,7 @@ class Map extends React.Component<Props & StateProps & DispatchProps> {
             compassEnabled={false}
             styleURL={
               selectedStyle
-                ? `http://localhost:9080/styles/${selectedStyle.id}/style.json`
+                ? `http://127.0.0.1:9080/styles/${selectedStyle.id}/style.json`
                 : undefined
             }
           >
