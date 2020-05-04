@@ -51,6 +51,9 @@ export interface StoreState {
   attachments: {
     [id: string]: Resource<Attachment>
   };
+
+  presets: string[];
+  selectedPreset: string;
 }
 
 export type SettingsState = {
